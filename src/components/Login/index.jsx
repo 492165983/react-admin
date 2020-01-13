@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import logo from './logo.png';
+import logo from './lo.jpg';
 
 import {Form ,Button ,Icon ,Input } from 'antd';
 import './index.less';
