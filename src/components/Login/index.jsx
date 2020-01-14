@@ -1,9 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {Form ,Button ,Icon ,Input,message } from 'antd';
+import {reqLogin } from '../../api';
+
 
 import logo from './lo.jpg';
 
-import {Form ,Button ,Icon ,Input } from 'antd';
+
 import './index.less';
+
 
 
 @Form.create()
@@ -37,6 +41,47 @@ class Login extends Component {
     // 必须要调用，否则会出问题
     callback();
   };
+  login =e =>{
+    //阻止默认行为
+    e.preventDefault();
+    //表单校验
+    //手机表单数据并收集数据
+    this.props.form.validateFields((err, values) => {
+        /*
+          err 错误对象
+            如果表单校验失败，就有错误，值是对象
+            如果表单校验成功，就没有错误，值是null
+          values
+            收集的表单数据
+        */
+      if(!err){
+        //表单校验成功
+        const {username,password} =values;
+        //发送请求
+        axios
+        .post('/api/login',{username,password})
+        .then(response=>{
+          //请求成功   判断是否登录成功
+          if (response.data.status === 0){
+            //说明登录成功   跳转到我们的Home界面
+            this.props.history.replace('/');
+          }else{
+            //else  表明登录失败  返回一些提示给用户
+            message.err(response.data.msg);
+            //登录失败，把密码框清空  让用户重新输入
+            this.props.form.resetFields(['password']);
+          }
+        })
+        .catch(err=>{
+          //提示错误
+          message.error('网络出现错误');
+          //清空密码框
+          this.props.form.resetFields(['password']);
+        });
+      }
+  });
+};
+
 
   render() {
     // getFieldDecorator 高阶组件：用来表单校验
@@ -50,7 +95,7 @@ class Login extends Component {
         </header>
         <section className='login-section'>
           <h3>用户登录</h3>
-          <Form className='login-form'>
+          <Form className='login-form' onSubmit={this.login}>
             <Form.Item>
               {getFieldDecorator('username', {
                 rules: [
@@ -101,7 +146,7 @@ class Login extends Component {
               )}
             </Form.Item>
             <Form.Item>
-              <Button className='login-form-btn' type='primary'>
+              <Button className='login-form-btn' type='primary' htmlType='submit'>
                 登录
               </Button>
             </Form.Item>
