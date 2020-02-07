@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ConfigProvider } from 'antd';
 import { IntlProvider } from 'react-intl';
-import Login from './containers/Login';
+import Login from './containers/login';
 
 import BasicLayout from './components/basic-layout';
 import { en, zhCN } from './locales';
