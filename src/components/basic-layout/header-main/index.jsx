@@ -4,6 +4,7 @@ import screenfull from 'screenfull';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import dayjs from 'dayjs';
 import { removeItem } from '$utils/storage';
 import { removeUser,changeLanguage } from '$redux/actions';
 import './index.less';
@@ -18,13 +19,20 @@ import './index.less';
 @withRouter
 class HeaderMain extends Component {
   state = {
-    isScreenfull: false
+    isScreenfull: false,
+    date:Date.now()
   };
 
 
   //绑定change 事件   因为不是react的合成事件  所以要解绑
   componentDidMount() {
     screenfull.on('change', this.handleScreenFullChange);
+
+    this.timeId = setInterval(() => {
+      this.setState({
+        date:Date.now()
+      })
+    }, 1000);
   }
 
   handleScreenFullChange = () => {
@@ -35,12 +43,14 @@ class HeaderMain extends Component {
     //进行解绑，不然容易导致内存泄漏
   componentWillUnmount() {
     screenfull.off('change', this.handleScreenFullChange);
+
+    clearInterval(this.timeTd);
   }
 
   screenFull = () => {
     // 因为ESC不能触发，但是change
     /* this.setState({
-      isScreenfull: !this.state.isScreenfull
+      isScreenfull: !this.state.isScreenfull 
     }); */
     screenfull.toggle();
   };
@@ -66,8 +76,8 @@ class HeaderMain extends Component {
      this.props.changeLanguage(language);
    }
   render() {
-    const { isScreenfull } = this.state;
-    const { username } = this.props;
+    const { isScreenfull,date } = this.state;
+    const { username ,language} = this.props;
 
     return (
       <div className='header-main'>
@@ -75,8 +85,13 @@ class HeaderMain extends Component {
           <Button size='small' onClick={this.screenFull}>
             <Icon type={isScreenfull ? 'fullscreen-exit' : 'fullscreen'} />
           </Button>
-          <Button className='header-main-lang' size='small' onClick={this.changeLanguage}>
-            English
+          <Button 
+          className='header-main-lang' 
+          size='small' 
+          onClick={this.changeLanguage}
+          >
+            {language ==='en' ? '中文': 'English'}
+            
           </Button>
           <span>hello, {username}~~</span>
           <Button size='small' type='link' onClick={this.logout}>
@@ -85,7 +100,11 @@ class HeaderMain extends Component {
         </div>
         <div className='header-main-bottom'>
           <span className='header-main-left'>商品管理</span>
-          <span className='header-main-right'>2020/01/14 15:58:37</span>
+          <span className='header-main-right'>
+            {
+              dayjs(date).format('YYYY/MM/DD HH:mm:ss' )
+            }
+          </span>
         </div>
       </div>
     );

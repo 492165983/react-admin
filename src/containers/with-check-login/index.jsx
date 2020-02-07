@@ -29,11 +29,11 @@ export default function withCheckLogin(WrappedComponent) {
           Redirect 用于render方法中
           this.props.history.push/replace 用于非render方式中
 
-        如果登录过，
-          访问 / ，可以访问
+      如果登录过，
+          访问 / /category，(访问不是 /login )可以访问
           访问 /login, 跳转到 /
         如果没有登录过
-          访问 / ，跳转到 /login
+          访问 / /category，(访问不是 /login )跳转到 /login
           访问 /login, 可以访问
       */
 
@@ -44,7 +44,7 @@ export default function withCheckLogin(WrappedComponent) {
 
       if (token) {
         // 登录过
-        if (pathname === '/login') {
+        if (pathname !== '/login') {
           // 跳转到主页
           return <Redirect to='/' />;
         }

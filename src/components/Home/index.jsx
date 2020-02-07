@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import withCheckLogin from '$cont/with-check-login';
+// import withCheckLogin from '$cont/with-check-login';
 
-@withCheckLogin
+// @withCheckLogin
 class Home extends Component {
   render() {
     return <div>Home...</div>;
