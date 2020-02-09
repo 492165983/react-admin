@@ -44,13 +44,13 @@ export default function withCheckLogin(WrappedComponent) {
 
       if (token) {
         // 登录过
-        if (pathname !== '/login') {
+        if (pathname === '/login') {
           // 跳转到主页
           return <Redirect to='/' />;
         }
       } else {
         // 没有登录过
-        if (pathname === '/') {
+        if (pathname !== '/login') {
           // 跳转到主页
           return <Redirect to='/login' />;
         }
